@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hadi Badex — Crypto Comedy Creator</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ========================= Design Tokens ========================= */
+    :root {
+      --red: #E63946;
+      --red-dark: #c1121f;
+      --red-glow: rgba(230, 57, 70, 0.15);
+      --white: #FFFFFF;
+      --off-white: #F9FAFB;
+      --bg: #FFFFFF;
+      --bg2: #F9FAFB;
+      --bg3: #F3F4F6;
+      --card: #FFFFFF;
+      --card-border: #E5E7EB;
+      --text: #111827;
+      --text-muted: #4B5563;
+      --text-dim: #9CA3AF;
+      --nav-bg: rgba(255, 255, 255, 0.92);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition: 0.2s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1117;
+      --bg2: #16181f;
+      --bg3: #1e2028;
+      --card: #1a1c23;
+      --card-border: #2a2d35;
+      --text: #f0f0f0;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --nav-bg: rgba(15, 17, 23, 0.9);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width:5px }
+    ::-webkit-scrollbar-track { background:var(--bg2) }
+    ::-webkit-scrollbar-thumb { background:var(--red); border-radius:6px }
+
+    /* ========================= Navbar ========================= */
+    nav {
+      position: fixed; top:0; width:100%; z-index:1000;
+      background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--card-border); padding:0 2rem; height:68px;
+      display:flex; align-items:center; justify-content:space-between;
+      transition: background 0.3s, border-color 0.3s; box-shadow: var(--shadow-sm);
+    }
+    .nav-logo { font-weight:800; font-size:1.4rem; color:var(--text); letter-spacing:-0.5px; text-decoration:none; display:flex; align-items:center; gap:10px; }
+    .nav-logo img { width:34px; height:34px; border-radius:8px; object-fit:cover; border:2px solid var(--red); flex-shrink:0; }
+    .nav-logo:hover { color: var(--red); }
+    .nav-links { display:flex; align-items:center; gap:2.2rem; list-style:none; }
+    .nav-links a { color:var(--text-muted); text-decoration:none; font-size:0.88rem; font-weight:600; transition:color 0.2s; }
+    .nav-links a:hover { color: var(--red); }
+    .nav-controls { display:flex; align-items:center; gap:0.75rem; }
+    .ctrl-btn { background:var(--card); border:1px solid var(--card-border); color:var(--text); cursor:pointer; border-radius: var(--radius-sm); padding:6px 14px; font-size:0.82rem; font-weight:600; transition:all var(--transition); display:flex; align-items:center; gap:5px; background:var(--bg2); }
+    .ctrl-btn:hover { border-color:var(--red); color:var(--red); background:var(--card); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:6px; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:0.3s; }
+
+    .mobile-menu { display:none; position:fixed; inset:68px 0 0; background:var(--bg); z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:2rem; box-shadow:var(--shadow-lg); }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-weight:700; font-size:2rem; color:var(--text); text-decoration:none; letter-spacing:0.5px; transition:color 0.2s; }
+    .mobile-menu a:hover { color: var(--red); }
+
+    /* ========================= Hero ========================= */
+    #home { min-height:100vh; display:flex; align-items:center; position:relative; overflow:hidden; padding:120px 2rem 5rem; background:var(--bg); }
+    .aurora-container { position:absolute; inset:0; overflow:hidden; }
+    .aurora-effect {
+      position:absolute; inset:-10px; opacity:0.5; pointer-events:none;
+      --white:#ffffff; --black:#000000; --transparent:transparent;
+      --blue-500:#3b82f6; --indigo-300:#a5b4fc; --blue-300:#93c5fd; --violet-200:#ddd6fe; --blue-400:#60a5fa;
+      --white-gradient:repeating-linear-gradient(100deg, var(--white) 0%, var(--white) 7%, var(--transparent) 10%, var(--transparent) 12%, var(--white) 16%);
+      --dark-gradient:repeating-linear-gradient(100deg, var(--black) 0%, var(--black) 7%, var(--transparent) 10%, var(--transparent) 12%, var(--black) 16%);
+      --aurora:repeating-linear-gradient(100deg, var(--blue-500) 10%, var(--indigo-300) 15%, var(--blue-300) 20%, var(--violet-200) 25%, var(--blue-400) 30%);
+      background-image:var(--white-gradient), var(--aurora);
+      background-size:300%, 200%; background-position:50% 50%, 50% 50%;
+      filter:blur(10px) invert(0);
+      -webkit-mask-image:radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%);
+      mask-image:radial-gradient(ellipse at 100% 0%, black 10%, transparent 70%);
+    }
+    [data-theme="dark"] .aurora-effect { background-image:var(--dark-gradient), var(--aurora); }
+    .aurora-effect::after { content:""; position:absolute; inset:0; background-image:var(--white-gradient), var(--aurora); background-size:200%, 100%; background-attachment:fixed; mix-blend-mode:difference; animation:auroraShift 8s linear infinite; }
+    [data-theme="dark"] .aurora-effect::after { background-image:var(--dark-gradient), var(--aurora); }
+    @keyframes auroraShift { 0% { background-position:50% 50%, 50% 50%; } 50% { background-position:150% 50%, 200% 50%; } 100% { background-position:250% 50%, 350% 50%; } }
+
+    .hero-inner { position:relative; z-index:1; max-width:1200px; margin:0 auto; width:100%; display:flex; flex-direction:column; gap:1.2rem; }
+    .btn-primary { background:var(--red); color:#fff; padding:14px 32px; border-radius:var(--radius-sm); font-weight:700; font-size:0.95rem; text-decoration:none; border:none; cursor:pointer; transition:all 0.25s; display:inline-flex; align-items:center; gap:8px; letter-spacing:0.3px; box-shadow:0 4px 12px rgba(230,57,70,0.25); }
+    .btn-primary:hover { background:var(--red-dark); transform:translateY(-2px); box-shadow:0 8px 20px var(--red-glow); }
+    .btn-outline { background:transparent; color:var(--text); padding:14px 32px; border-radius:var(--radius-sm); font-weight:700; font-size:0.95rem; text-decoration:none; border:1.5px solid var(--card-border); cursor:pointer; transition:all 0.25s; display:inline-flex; align-items:center; gap:8px; font-family:'Montserrat', sans-serif; }
+    .btn-outline:hover { border-color:var(--red); color:var(--red); transform:translateY(-2px); background:rgba(230,57,70,0.02); }
+
+    /* ========================= Sections ========================= */
+    section { padding:90px 2rem; position:relative; z-index:1; }
+    .container { max-width:1200px; margin:0 auto; width:100%; }
+    .section-title { font-weight:800; font-size:clamp(2.2rem, 5vw, 3.8rem); line-height:1.15; letter-spacing:-0.5px; margin-bottom:1rem; color:var(--text); }
+    .section-title span { color:var(--red); }
+    .section-desc { font-size:1.05rem; color:var(--text-muted); max-width:640px; line-height:1.7; margin-bottom:3.5rem; font-weight:500; }
+    .divider { height:1px; background:linear-gradient(90deg, transparent, var(--card-border) 20%, var(--card-border) 80%, transparent); margin:0; }
+
+    /* Hero text */
+    .hero-h1 { font-weight:900; font-size:clamp(3.2rem, 9vw, 5.5rem); line-height:1.08; letter-spacing:-1.5px; margin-bottom:0.5rem; animation:fadeUp 0.7s 0.1s ease both; color:var(--text); }
+    .hero-h1 span { color:var(--red); }
+    .hero-sub { font-size:1.1rem; color:var(--text-muted); font-weight:600; margin-bottom:0.3rem; letter-spacing:0.2px; animation:fadeUp 0.7s 0.2s ease both; max-width:600px; }
+    .hero-desc { font-size:1rem; color:var(--text-muted); max-width:520px; line-height:1.7; margin-bottom:1.8rem; animation:fadeUp 0.7s 0.3s ease both; font-weight:500; }
+    .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; animation:fadeUp 0.7s 0.4s ease both; margin-bottom:2rem; }
+
+    /* About */
+    .about-grid { display:flex; flex-direction:column; gap:3rem; }
+    .new-about-text { font-size:1.05rem; line-height:1.8; color:var(--text-muted); font-weight:600; }
+    .skills-grid { display:flex; flex-wrap:wrap; gap:12px; margin-top:2rem; }
+    .skill-pill { background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:12px 24px; font-size:1rem; font-weight:700; color:var(--text-muted); background:var(--bg2); letter-spacing:0.3px; transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2); cursor:default; }
+    .skill-pill:hover { border-color:var(--red); color:var(--red); background:var(--card); transform:scale(1.08); box-shadow:0 6px 18px rgba(230,57,70,0.2); }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-top:2rem; }
+    .stat-card { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:2rem 1.8rem; position:relative; overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow var(--transition), border-color var(--transition); }
+    .stat-card:hover { box-shadow:var(--shadow-md); border-color:var(--red); }
+    .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--red); border-radius:3px 3px 0 0; }
+    .stat-num { font-weight:900; font-size:3.5rem; color:var(--red); line-height:1.1; display:block; }
+    .stat-label { font-size:0.88rem; color:var(--text-muted); margin-top:0.4rem; font-weight:600; }
+
+    /* Services */
+    #services { background:var(--bg); }
+    .services-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.8rem; }
+    .service-card { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:2.2rem 1.8rem; position:relative; overflow:hidden; transition:all 0.3s; display:flex; flex-direction:column; box-shadow:var(--shadow-sm); }
+    .service-card:hover { border-color:var(--red); transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+    .service-card.featured { border-color:var(--red); background:linear-gradient(145deg, rgba(230,57,70,0.04) 0%, var(--card) 50%); }
+    .service-card.featured::after { content:'⭐ BEST VALUE'; position:absolute; top:14px; right:-30px; background:var(--red); color:#fff; font-size:0.6rem; font-weight:700; letter-spacing:1px; padding:4px 40px; transform:rotate(45deg); }
+    .service-icon { width:60px; height:60px; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 70%); border:2px solid rgba(230,57,70,0.3); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--red); transform:perspective(200px) rotateY(-5deg) rotateX(5deg); transition:all 0.3s; box-shadow:0 8px 16px rgba(0,0,0,0.1); margin-bottom:1.4rem; }
+    .service-card:hover .service-icon { transform:perspective(200px) rotateY(0deg) rotateX(0deg) scale(1.1); box-shadow:0 12px 24px rgba(230,57,70,0.3); }
+    .service-name { font-weight:800; font-size:1.5rem; letter-spacing:-0.3px; margin-bottom:0.6rem; color:var(--text); }
+    .service-desc { font-size:0.88rem; color:var(--text-muted); line-height:1.6; flex:1; margin-bottom:1.8rem; font-weight:500; }
+    .service-price { font-weight:900; font-size:2.2rem; color:var(--red); letter-spacing:-0.5px; }
+    .service-price small { font-size:0.85rem; color:var(--text-dim); font-weight:500; letter-spacing:0; margin-left:2px; }
+    .services-cta { text-align:center; margin-top:3rem; }
+
+    /* Portfolio */
+    #portfolio { background:var(--bg2); }
+    .portfolio-tabs { display:flex; gap:0.6rem; margin-bottom:3rem; flex-wrap:wrap; }
+    .tab-btn { padding:10px 22px; border-radius:100px; border:1.5px solid var(--card-border); background:var(--card); color:var(--text-muted); font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.2s; text-transform:none; letter-spacing:0.2px; }
+    .tab-btn.active, .tab-btn:hover { background:var(--red); color:#fff; border-color:var(--red); }
+    .portfolio-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem; }
+    .portfolio-card { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-md); overflow:hidden; transition:all 0.3s; text-decoration:none; color:var(--text); display:flex; flex-direction:column; box-shadow:var(--shadow-sm); }
+    .portfolio-card:hover { border-color:var(--red); transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+    .portfolio-card.hidden { display:none; }
+    .portfolio-thumb { height:180px; background:var(--bg3); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .portfolio-body { padding:1.4rem 1.6rem 1.8rem; display:flex; flex-direction:column; flex:1; }
+    .portfolio-cat { display:inline-block; background:rgba(230,57,70,0.08); color:var(--red); font-size:0.68rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 12px; border-radius:6px; margin-bottom:0.8rem; }
+    .portfolio-title { font-weight:800; font-size:1.05rem; margin-bottom:0.4rem; }
+    .portfolio-client { font-size:0.85rem; color:var(--text-dim); margin-bottom:1.5rem; flex:1; font-weight:500; }
+    .portfolio-link { display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; color:var(--red); text-decoration:none; transition:gap 0.2s; }
+    .portfolio-card:hover .portfolio-link { gap:10px; }
+
+    /* ========================= Clients (Logo + Text Slider) ========================= */
+    #clients { background:var(--bg); padding:90px 0; }
+    .logo-cloud { position:relative; width:100%; padding:2rem 0; overflow:hidden; background:linear-gradient(to right, var(--bg2), transparent 20%, transparent 80%, var(--bg2)); }
+    .logo-cloud::before, .logo-cloud::after { content:''; position:absolute; top:0; width:200px; height:100%; z-index:2; pointer-events:none; }
+    .logo-cloud::before { left:0; background:linear-gradient(to right, var(--bg2), transparent); }
+    .logo-cloud::after { right:0; background:linear-gradient(to left, var(--bg2), transparent); }
+    .text-slider { display:flex; gap:60px; animation:slide 40s linear infinite; width:max-content; align-items:center; }
+    .text-slider:hover { animation-play-state:paused; }
+    .text-slider a {
+      background:var(--card); border:1px solid var(--card-border); border-radius:100px;
+      padding:0.6rem 1.8rem; font-weight:700; color:var(--text); text-decoration:none;
+      display:flex; align-items:center; gap:8px; transition:0.2s; white-space:nowrap;
+    }
+    .text-slider a:hover { border-color:var(--red); color:var(--red); }
+    .text-slider a img.logo-icon {
+      height: 1.6rem; width: auto; object-fit: contain; border-radius: 4px;
+    }
+    @keyframes slide { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+
+    /* ========================= Contact ========================= */
+    #contact { background:var(--bg2); }
+    .contact-inner { display:grid; grid-template-columns:1fr; gap:3rem; align-items:center; max-width:700px; }
+    .contact-links { display:flex; flex-direction:column; gap:1rem; margin-top:2rem; }
+    .contact-item { display:flex; align-items:center; gap:1.2rem; background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:1.2rem 1.6rem; text-decoration:none; color:var(--text); transition:all 0.25s; box-shadow:var(--shadow-sm); }
+    .contact-item:hover { border-color:var(--red); transform:translateX(6px); box-shadow:var(--shadow-md); }
+    .contact-icon { width:48px; height:48px; background:rgba(230,57,70,0.06); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--red); font-size:1.2rem; flex-shrink:0; }
+    .contact-info { flex:1; }
+    .contact-label { font-size:0.72rem; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; font-weight:700; }
+    .contact-val { font-size:0.98rem; font-weight:700; margin-top:2px; }
+    .contact-arrow { color:var(--text-dim); font-size:0.9rem; transition:transform 0.2s; }
+    .contact-item:hover .contact-arrow { transform:translateX(4px); color:var(--red); }
+
+    footer { background:var(--bg); border-top:1px solid var(--card-border); padding:2.8rem 2rem; text-align:center; }
+    .footer-inner { max-width:1200px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+    .footer-logo { font-weight:900; font-size:1.6rem; letter-spacing:1px; color:var(--red); }
+    .footer-tagline { font-size:0.88rem; color:var(--text-dim); font-style:italic; font-weight:500; }
+    .footer-socials { display:flex; gap:0.8rem; }
+    .social-link { width:44px; height:44px; background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; color:var(--text-muted); text-decoration:none; font-size:1rem; transition:all var(--transition); }
+    .social-link:hover { border-color:var(--red); color:var(--red); transform:translateY(-3px); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    .reveal { opacity:0; transform:translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; } .reveal-delay-2 { transition-delay:0.2s; } .reveal-delay-3 { transition-delay:0.3s; } .reveal-delay-4 { transition-delay:0.4s; }
+
+    /* Responsive */
+    @media (max-width:1024px) { .services-grid { grid-template-columns:repeat(2,1fr); } .portfolio-grid { grid-template-columns:repeat(2,1fr); } .stats-grid { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:768px) {
+      html { font-size:15px; } body { line-height:1.5; } nav { padding:0 1.2rem; height:60px; } .nav-links { display:none; } .hamburger { display:flex; } .nav-logo { font-size:1.2rem; } .nav-logo img { width:28px; height:28px; } section { padding:60px 1rem; } #home { padding:100px 1rem 3rem; min-height:auto; } .hero-h1 { font-size:clamp(2.4rem, 10vw, 3.8rem); letter-spacing:-1px; } .hero-sub { font-size:0.9rem; } .hero-desc { font-size:0.9rem; } .hero-ctas { flex-direction:column; align-items:flex-start; } .btn-primary, .btn-outline { width:100%; justify-content:center; padding:12px 20px; font-size:0.9rem; } .about-grid { gap:2rem; } .stats-grid { grid-template-columns:1fr 1fr; gap:1rem; } .stat-card { padding:1.5rem; } .stat-num { font-size:2.8rem; } .skill-pill { padding:10px 18px; font-size:0.9rem; } .services-grid { grid-template-columns:1fr; gap:1.2rem; } .service-card { padding:1.8rem; } .service-icon { width:50px; height:50px; font-size:1.6rem; } .service-name { font-size:1.3rem; } .service-price { font-size:2rem; } .portfolio-tabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:0.5rem; gap:0.4rem; } .tab-btn { padding:8px 16px; font-size:0.75rem; white-space:nowrap; } .portfolio-grid { grid-template-columns:1fr; } .portfolio-thumb { height:160px; } .logo-cloud { padding:1rem 0; } .text-slider { gap:40px; } .text-slider a { padding:0.5rem 1.2rem; font-size:0.85rem; } .text-slider a img.logo-icon { height:1.3rem; } .contact-inner { max-width:100%; } .contact-item { padding:1rem; } .contact-icon { width:40px; height:40px; font-size:1rem; } .contact-val { font-size:0.9rem; } footer { padding:2rem 1rem; } .footer-logo { font-size:1.4rem; }
+    }
+    @media (max-width:480px) { html { font-size:14px; } .stats-grid { grid-template-columns:1fr; } .mobile-menu a { font-size:1.8rem; } .skill-pill { padding:8px 16px; font-size:0.85rem; } .text-slider { gap:30px; } .text-slider a { padding:0.4rem 1rem; font-size:0.8rem; } .text-slider a img.logo-icon { height:1.1rem; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#home" class="nav-logo"><img src="images/favicon.png" alt="Hadi Badex">HADI BADEX</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" data-i18n="nav_home">Home</a></li>
+      <li><a href="#about" data-i18n="nav_about">About</a></li>
+      <li><a href="#services" data-i18n="nav_services">Services</a></li>
+      <li><a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a></li>
+      <li><a href="#clients" data-i18n="nav_clients">Clients</a></li>
+      <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="ctrl-btn" id="themeToggle"><i class="fa-solid fa-sun" id="themeIcon"></i></button>
+      <button class="ctrl-btn" id="langToggle"><span id="langLabel">🇺🇸 EN</span></button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home" onclick="closeMobileMenu()" data-i18n="nav_home">Home</a>
+    <a href="#about" onclick="closeMobileMenu()" data-i18n="nav_about">About</a>
+    <a href="#services" onclick="closeMobileMenu()" data-i18n="nav_services">Services</a>
+    <a href="#portfolio" onclick="closeMobileMenu()" data-i18n="nav_portfolio">Portfolio</a>
+    <a href="#clients" onclick="closeMobileMenu()" data-i18n="nav_clients">Clients</a>
+    <a href="#contact" onclick="closeMobileMenu()" data-i18n="nav_contact">Contact</a>
+  </div>
+
+  <section id="home">
+    <div class="aurora-container"><div class="aurora-effect"></div></div>
+    <div class="hero-inner">
+      <div class="btn-outline" data-i18n="hero_badge" style="align-self:flex-start; margin-bottom:1rem;">CRYPTO COMEDY CREATOR</div>
+      <h1 class="hero-h1"><span data-i18n="hero_h1_1">I MAKE</span><br><span style="color:var(--red)" data-i18n="hero_h1_2">CRYPTO</span><br><span data-i18n="hero_h1_3">ACTUALLY FUN</span></h1>
+      <p class="hero-sub" data-i18n="hero_sub">Crypto Comedy Creator · Web3 Content Strategist · 7 Years in Digital Content</p>
+      <p class="hero-desc" data-i18n="hero_desc">Creating viral, educational, and entertaining content for the crypto community across TikTok, X, Instagram, and more.</p>
+      <div class="hero-ctas">
+        <a href="#portfolio" class="btn-primary" data-i18n="hero_cta1">See My Work <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#contact" class="btn-outline" data-i18n="hero_cta2">Hire Me</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <div class="btn-outline" data-i18n="about_label" style="margin-bottom:1.5rem;">About Me</div>
+          <h2 class="section-title" data-i18n="about_title">KREATOR DI BALIK<br>KONTEN <span>KOMEDI</span></h2>
+          <div class="new-about-text" data-i18n="about_text_new">Saya Hadi Badex, Saya menyatukan konten kripto menjadi suatu hal yang lucu dan edukatif<br><br>7 tahun, 3 bear market, saya bertahan di industri konten komedi kripto,<br>Saya tau mana konten yang cuma dapet views, mana yang bikin orang percaya dan akhirnya pakai produk mereka, Tebak mana yang saya buat?<br><br>OKX, Bitget Wallet, BingX, Gate.io mereka balik lagi<br>Bukan karena saya murah, tapi karena mereka percaya</div>
+          <div class="stats-grid reveal reveal-delay-2">
+            <div class="stat-card"><span class="stat-num" data-count="7">0</span><div class="stat-label" data-i18n="stat1">Years in Digital Content</div></div>
+            <div class="stat-card"><span class="stat-num" data-count="12">0</span><div class="stat-label" data-i18n="stat2">Brand Collaborations</div></div>
+            <div class="stat-card"><span class="stat-num" data-count="4">0</span><div class="stat-label" data-i18n="stat3">Years Video Editing</div></div>
+            <div class="stat-card"><span class="stat-num" style="font-size:2rem">Multi<br>Platform</span><div class="stat-label" data-i18n="stat4">TikTok · X · IG · FB</div></div>
+          </div>
+          <div class="skills-grid">
+            <div class="btn-outline" data-i18n="skills_label" style="width:100%; margin-bottom:0.5rem;">SKILL</div>
+            <span class="skill-pill">Adobe Premiere Pro</span><span class="skill-pill">CapCut</span><span class="skill-pill">Canva</span><span class="skill-pill">Content Strategy</span><span class="skill-pill">Crypto & Web3</span><span class="skill-pill">Copywriting</span><span class="skill-pill">Video Editing</span><span class="skill-pill">Time Management</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="services">
+    <div class="container">
+      <div class="reveal">
+        <div class="btn-outline" data-i18n="services_label" style="margin-bottom:1.5rem;">Services</div>
+        <h2 class="section-title" data-i18n="services_title">MY <span>PACKAGES</span></h2>
+        <p class="section-desc" data-i18n="services_desc">Affordable content packages designed for crypto brands looking to grow. Pick what fits your campaign or go complete for maximum impact.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal reveal-delay-1"><div class="service-icon"><i class="fa-solid fa-file-pen"></i></div><div class="service-name" data-i18n="svc1_name">Longpost</div><div class="service-desc" data-i18n="svc1_desc">Tweet long-form post deep, engaging content for X/Twitter that builds authority and drives conversation.</div><div class="service-price">$150<small data-i18n="per_post">/post</small></div></div>
+        <div class="service-card reveal reveal-delay-2"><div class="service-icon"><i class="fa-solid fa-newspaper"></i></div><div class="service-name" data-i18n="svc2_name">Articles</div><div class="service-desc" data-i18n="svc2_desc">In-depth written article for blogs or Medium comprehensive, SEO-friendly content that educates your audience.</div><div class="service-price">$150<small data-i18n="per_article">/article</small></div></div>
+        <div class="service-card reveal reveal-delay-3"><div class="service-icon"><i class="fa-solid fa-video"></i></div><div class="service-name" data-i18n="svc3_name">Video</div><div class="service-desc" data-i18n="svc3_desc">Short-form video 30–60 seconds, fully edited, captioned, and ready to post on TikTok, Reels, or Shorts.</div><div class="service-price">$250<small data-i18n="per_vid">/video</small></div></div>
+        <div class="service-card featured reveal reveal-delay-4"><div class="service-icon"><i class="fa-solid fa-boxes-stacked"></i></div><div class="service-name" data-i18n="svc4_name">Package Complete</div><div class="service-desc" data-i18n="svc4_desc">Video + Longpost + Articles the full campaign package for maximum reach and conversion across all channels.</div><div class="service-price">$500<small data-i18n="per_pkg">/campaign</small></div></div>
+      </div>
+      <div class="services-cta reveal"><a href="#contact" class="btn-primary" data-i18n="svc_cta">Get in Touch <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="portfolio">
+    <div class="container">
+      <div class="reveal">
+        <div class="btn-outline" data-i18n="port_label" style="margin-bottom:1.5rem;">Portfolio</div>
+        <h2 class="section-title" data-i18n="port_title">MY <span>WORK</span></h2>
+        <p class="section-desc" data-i18n="port_desc">A selection of content I've created for top crypto brands from viral short videos to in-depth long-form posts and articles.</p>
+      </div>
+      <div class="portfolio-tabs reveal">
+        <button class="tab-btn active" data-filter="all" data-i18n="tab_all">All</button>
+        <button class="tab-btn" data-filter="video" data-i18n="tab_video">Video</button>
+        <button class="tab-btn" data-filter="longpost" data-i18n="tab_long">Longpost</button>
+        <button class="tab-btn" data-filter="article" data-i18n="tab_article">Article</button>
+      </div>
+      <div class="portfolio-grid" id="portfolioGrid">
+        <a href="https://x.com/i/status/2026590493468209563" target="_blank" class="portfolio-card" data-cat="video"><div class="portfolio-thumb"><img src="images/drx-vidio.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Video</span><div class="portfolio-title">DRX Campaign</div><div class="portfolio-client" data-i18n="port_drx_v">Promotional video campaign for DRX Token viral content strategy</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/i/status/2024414196482658761" target="_blank" class="portfolio-card" data-cat="video"><div class="portfolio-thumb"><img src="images/fitur-logo.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Video</span><div class="portfolio-title" data-i18n="port_feat_title">Platform Feature Showcase</div><div class="portfolio-client" data-i18n="port_feat_desc">Short-form feature highlight video clean, engaging, and informative</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/i/status/2026205707436196094" target="_blank" class="portfolio-card" data-cat="longpost"><div class="portfolio-thumb"><img src="images/drx-campaign.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Longpost</span><div class="portfolio-title">DRX Campaign Thread</div><div class="portfolio-client" data-i18n="port_drx_l">Long-form X post driving awareness and engagement for DRX Token</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/i/status/2025828219728130478" target="_blank" class="portfolio-card" data-cat="longpost"><div class="portfolio-thumb"><img src="images/bittime.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Longpost</span><div class="portfolio-title">BITTIME</div><div class="portfolio-client" data-i18n="port_bittime">Deep-dive long-form content for Bittime crypto platform</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/hadibadex/status/2021912320503636274?s=20" target="_blank" class="portfolio-card" data-cat="longpost"><div class="portfolio-thumb"><img src="images/junkfun.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Longpost</span><div class="portfolio-title">JUNKFUN</div><div class="portfolio-client" data-i18n="port_junk">Engaging long-form content for Junkfun project</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/hadibadex/status/2039298227854586216?s=20" target="_blank" class="portfolio-card" data-cat="longpost"><div class="portfolio-thumb"><img src="images/okx-longpost.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Longpost</span><div class="portfolio-title">OKX Thread</div><div class="portfolio-client" data-i18n="port_okx_l">Long-form X thread content for OKX one of the world's top exchanges</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/hadibadex/status/2025353022390628606?s=20" target="_blank" class="portfolio-card" data-cat="longpost"><div class="portfolio-thumb"><img src="images/canton.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Longpost</span><div class="portfolio-title">CANTON</div><div class="portfolio-client" data-i18n="port_canton">Long-form content piece for Canton project</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+        <a href="https://x.com/hadibadex/status/2018923983065006202?s=20" target="_blank" class="portfolio-card" data-cat="article"><div class="portfolio-thumb"><img src="images/okx-articles.png" style="width:100%;height:100%;object-fit:cover;"></div><div class="portfolio-body"><span class="portfolio-cat">Article</span><div class="portfolio-title">OKX Article</div><div class="portfolio-client" data-i18n="port_okx_a">In-depth written article for OKX comprehensive, educational, and well-researched</div><span class="portfolio-link">View on X <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="clients">
+    <div class="container" style="max-width:100%;">
+      <div class="reveal" style="text-align:center;">
+        <div class="btn-outline" data-i18n="clients_label" style="margin-bottom:1.5rem;">Trusted By</div>
+        <h2 class="section-title" data-i18n="clients_title">BRANDS I'VE <span>WORKED WITH</span></h2>
+        <p class="section-desc" data-i18n="clients_desc" style="margin:0 auto 3rem;">Proud to have collaborated with some of the biggest names in the crypto and Web3 industry. Click any brand to visit them on X.</p>
+      </div>
+    </div>
+    <div class="logo-cloud"><div class="text-slider" id="clientSlider"></div></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div>
+          <div class="btn-outline reveal" data-i18n="contact_label" style="margin-bottom:1.5rem;">Contact</div>
+          <h2 class="section-title reveal" data-i18n="contact_title">LET'S WORK <span>TOGETHER</span></h2>
+          <p class="section-desc reveal" data-i18n="contact_desc">Have a project in mind? Let's create something viral together. Reach out through any channel below.</p>
+          <div class="contact-links">
+            <a href="mailto:bangbadex@gmail.com" class="contact-item reveal reveal-delay-1"><div class="contact-icon"><i class="fa-solid fa-envelope"></i></div><div class="contact-info"><div class="contact-label">Email</div><div class="contact-val">bangbadex@gmail.com</div></div><i class="fa-solid fa-arrow-right contact-arrow"></i></a>
+            <a href="https://t.me/badexreal" target="_blank" class="contact-item reveal reveal-delay-2"><div class="contact-icon"><i class="fa-brands fa-telegram"></i></div><div class="contact-info"><div class="contact-label">Telegram</div><div class="contact-val">@badexreal</div></div><i class="fa-solid fa-arrow-right contact-arrow"></i></a>
+            <a href="https://x.com/hadibadex" target="_blank" class="contact-item reveal reveal-delay-3"><div class="contact-icon"><i class="fa-brands fa-x-twitter"></i></div><div class="contact-info"><div class="contact-label">Twitter / X</div><div class="contact-val">@hadibadex</div></div><i class="fa-solid fa-arrow-right contact-arrow"></i></a>
+            <a href="https://www.tiktok.com/@hadibadex" target="_blank" class="contact-item reveal reveal-delay-4"><div class="contact-icon"><i class="fa-brands fa-tiktok"></i></div><div class="contact-info"><div class="contact-label">TikTok</div><div class="contact-val">@hadibadex</div></div><i class="fa-solid fa-arrow-right contact-arrow"></i></a>
+            <a href="https://www.instagram.com/hadibadexreal/" target="_blank" class="contact-item reveal reveal-delay-5"><div class="contact-icon"><i class="fa-brands fa-instagram"></i></div><div class="contact-info"><div class="contact-label">Instagram</div><div class="contact-val">@hadibadexreal</div></div><i class="fa-solid fa-arrow-right contact-arrow"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">HADI BADEX</div>
+      <div class="footer-tagline" data-i18n="footer_tagline">"Making Crypto Fun, One Post at a Time"</div>
+      <div class="footer-socials">
+        <a href="https://x.com/hadibadex" target="_blank" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.tiktok.com/@hadibadex" target="_blank" class="social-link"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/hadibadexreal/" target="_blank" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+      <div class="footer-copy">© 2026 Hadi Badex. All Rights Reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        nav_home:'Home', nav_about:'About', nav_services:'Services',
+        nav_portfolio:'Portfolio', nav_clients:'Clients', nav_contact:'Contact',
+        hero_badge:'CRYPTO COMEDY CREATOR',
+        hero_h1_1:'I MAKE', hero_h1_2:'CRYPTO', hero_h1_3:'ACTUALLY FUN',
+        hero_sub:'Crypto Comedy Creator · Web3 Content Strategist · 7 Years in Digital Content',
+        hero_desc:'Creating viral, educational, and entertaining content for the crypto community across TikTok, X, Instagram, and more.',
+        hero_cta1:'See My Work', hero_cta2:'Hire Me',
+        about_label:'About Me', about_title:'THE CREATOR<br>BEHIND THE <span>COMEDY</span>',
+        about_text_new:"I'm Hadi Badex, I turn crypto content into something funny and educational.<br><br>7 years, 3 bear markets, I survived in the crypto comedy content industry. I know which content only gets views, and which makes people trust and eventually use their products. Guess which one I make?<br><br>OKX, Bitget Wallet, BingX, Gate.io — they come back. Not because I'm cheap, but because they trust.",
+        stat1:'Years in Digital Content', stat2:'Brand Collaborations', stat3:'Years Video Editing', stat4:'TikTok · X · IG · FB',
+        skills_label:'SKILL',
+        services_label:'Services', services_title:'MY <span>PACKAGES</span>',
+        services_desc:"Affordable content packages designed for crypto brands looking to grow. Pick what fits your campaign or go complete for maximum impact.",
+        svc1_name:'Longpost', svc1_desc:'Tweet long-form post deep, engaging content for X/Twitter that builds authority and drives conversation.',
+        svc2_name:'Articles', svc2_desc:'In-depth written article for blogs or Medium comprehensive, SEO-friendly content that educates your audience.',
+        svc3_name:'Video', svc3_desc:'Short-form video 30–60 seconds, fully edited, captioned, and ready to post on TikTok, Reels, or Shorts.',
+        svc4_name:'Package Complete', svc4_desc:'Video + Longpost + Articles the full campaign package for maximum reach and conversion across all channels.',
+        per_post:'/post', per_article:'/article', per_vid:'/video', per_pkg:'/campaign',
+        svc_cta:'Get in Touch',
+        port_label:'Portfolio', port_title:'MY <span>WORK</span>',
+        port_desc:"A selection of content I've created for top crypto brands from viral short videos to in-depth long-form posts and articles.",
+        tab_all:'All', tab_video:'Video', tab_long:'Longpost', tab_article:'Article',
+        port_drx_v:'Promotional video campaign for DRX Token viral content strategy',
+        port_feat_title:'Platform Feature Showcase',
+        port_feat_desc:'Short-form feature highlight video clean, engaging, and informative',
+        port_drx_l:'Long-form X post driving awareness and engagement for DRX Token',
+        port_bittime:'Deep-dive long-form content for Bittime crypto platform',
+        port_junk:'Engaging long-form content for Junkfun project',
+        port_okx_l:"Long-form X thread content for OKX one of the world's top exchanges",
+        port_canton:'Long-form content piece for Canton project',
+        port_okx_a:'In-depth written article for OKX comprehensive, educational, and well-researched',
+        clients_label:'Trusted By', clients_title:"BRANDS I'VE <span>WORKED WITH</span>",
+        clients_desc:"Proud to have collaborated with some of the biggest names in the crypto and Web3 industry. Click any brand to visit them on X.",
+        contact_label:'Contact', contact_title:"LET'S WORK <span>TOGETHER</span>",
+        contact_desc:"Have a project in mind? Let's create something viral together. Reach out through any channel below.",
+        footer_tagline:'"Making Crypto Fun, One Post at a Time"'
+      },
+      id: {
+        nav_home:'Beranda', nav_about:'Tentang', nav_services:'Layanan',
+        nav_portfolio:'Portofolio', nav_clients:'Klien', nav_contact:'Kontak',
+        hero_badge:'KREATOR KOMEDI KRIPTO',
+        hero_h1_1:'AKU BIKIN', hero_h1_2:'CRYPTO', hero_h1_3:'JADI MENGHIBUR',
+        hero_sub:'Crypto Comedy Creator · Strategi Konten Web3 · 7 Tahun di Digital Content',
+        hero_desc:'Membuat konten viral, edukatif, dan menghibur untuk komunitas crypto di TikTok, X, Instagram, dan platform lainnya.',
+        hero_cta1:'Lihat Karya Saya', hero_cta2:'Hire Saya',
+        about_label:'Tentang Saya', about_title:'KREATOR DI BALIK<br>KONTEN <span>KOMEDI</span>',
+        about_text_new:"Saya Hadi Badex, Saya menyatukan konten kripto menjadi suatu hal yang lucu dan edukatif<br><br>7 tahun, 3 bear market, saya bertahan di industri konten komedi kripto,<br>Saya tau mana konten yang cuma dapet views, mana yang bikin orang percaya dan akhirnya pakai produk mereka, Tebak mana yang saya buat?<br><br>OKX, Bitget Wallet, BingX, Gate.io mereka balik lagi<br>Bukan karena saya murah, tapi karena mereka percaya",
+        stat1:'Tahun di Digital Content', stat2:'Kolaborasi Brand', stat3:'Tahun Video Editing', stat4:'TikTok · X · IG ',
+        skills_label:'SKILL',
+        services_label:'Layanan', services_title:'PAKET <span>SAYA</span>',
+        services_desc:"Paket konten terjangkau yang dirancang untuk brand crypto yang ingin berkembang. Pilih yang sesuai kampanye kamu atau ambil paket lengkap untuk dampak maksimal.",
+        svc1_name:'Tulisan Panjang', svc1_desc:'Tweet panjang konten mendalam dan engaging untuk X/Twitter yang membangun otoritas dan mendorong percakapan.',
+        svc2_name:'Artikel', svc2_desc:'Artikel tulisan mendalam konten komprehensif dan SEO-friendly yang mengedukasi audiens.',
+        svc3_name:'Video', svc3_desc:'Video pendek 30–60 detik, sudah diedit lengkap, ada caption, siap tayang di TikTok, X dan Instagram.',
+        svc4_name:'Paket Komplit', svc4_desc:'Video + Longpost + Artikel paket kampanye lengkap untuk jangkauan dan konversi maksimal di semua sosial media.',
+        per_post:'/post', per_article:'/artikel', per_vid:'/video', per_pkg:'/kampanye',
+        svc_cta:'Hubungi Saya',
+        port_label:'Portofolio', port_title:'KARYA <span>SAYA</span>',
+        port_desc:'Pilihan konten yang telah saya buat untuk brand crypto terkemuka dari video pendek yang viral hingga longpost dan artikel mendalam.',
+        tab_all:'Semua', tab_video:'Video', tab_long:'Longpost', tab_article:'Artikel',
+        port_drx_v:'Kampanye video promosi untuk DRX Token strategi konten viral',
+        port_feat_title:'Showcase Fitur Platform',
+        port_feat_desc:'Video highlight fitur singkat bersih, engaging, dan informatif',
+        port_drx_l:'Longpost X yang mendorong awareness dan engagement untuk DRX Token',
+        port_bittime:'Konten long-form mendalam untuk platform crypto Bittime',
+        port_junk:'Konten long-form menarik untuk proyek Junkfun',
+        port_okx_l:'Konten thread X untuk OKX salah satu exchange terbesar di dunia',
+        port_canton:'Konten long-form untuk proyek Canton',
+        port_okx_a:'Artikel mendalam untuk OKX komprehensif, edukatif, dan terriset dengan baik',
+        clients_label:'Dipercaya Oleh', clients_title:"BRAND YANG PERNAH<br>SAYA <span>KERJAKAN</span>",
+        clients_desc:"Bangga telah berkolaborasi dengan nama-nama besar di industri crypto dan Web3. Klik brand manapun untuk mengunjungi mereka di X.",
+        contact_label:'Kontak', contact_title:"AYO <span>BERKOLABORASI</span>",
+        contact_desc:"Punya project yang ingin dikerjakan? Ayo buat sesuatu yang viral bersama. Hubungi saya melalui channel manapun di bawah.",
+        footer_tagline:'"Bikin Crypto Seru, Satu Konten Setiap Saat"'
+      }
+    };
+
+    const clientLogos = [
+      { src:'images/bitget-logo.png', alt:'Bitget Wallet', url:'https://x.com/BitgetWallet' },
+      { src:'images/okx-logo.png', alt:'OKX', url:'https://x.com/okx' },
+      { src:'images/bingx-logo.png', alt:'BingX', url:'https://x.com/BingXOfficial' },
+      { src:'images/gate-logo.png', alt:'Gate.io', url:'https://x.com/Gate_io' },
+      { src:'images/finder-logo.png', alt:'Airdrop Finder', url:'https://x.com/Airdropfinds' },
+      { src:'images/alturax-logo.png', alt:'Alturax', url:'https://x.com/alturax' },
+      { src:'images/mwk-logo.png', alt:'MWX', url:'https://x.com/mwx_ai' },
+      { src:'images/ab-dao.png', alt:'AB DAO', url:'https://x.com/ABDAO_Global' },
+      { src:'images/coinfest-logo.png', alt:'Coinfest Asia', url:'https://x.com/CoinfestAsia' },
+      { src:'images/fortuna-logo.png', alt:'AI Fortuna', url:'https://x.com/aiFtnProtocol' },
+      { src:'images/tomket-logo.png', alt:'Tomket Lovers', url:'https://x.com/TomketLovers' },
+      { src:'images/drx-logo.png', alt:'DRX Token', url:'https://x.com/DrxToken' }
+    ];
+
+    function initClientSlider() {
+      const slider = document.getElementById('clientSlider');
+      if (!slider) return;
+      const html = clientLogos.map(logo =>
+        `<a href="${logo.url}" target="_blank" rel="noopener">
+          <img src="${logo.src}" alt="${logo.alt}" class="logo-icon" loading="lazy">
+          ${logo.alt}
+        </a>`
+      ).join('');
+      slider.innerHTML = html + html;
+    }
+
+    let currentLang = localStorage.getItem('lang') || 'en';
+    let currentTheme = localStorage.getItem('theme') || 'light';
+
+    function applyLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('lang', lang);
+      const t = translations[lang] || translations.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+      document.getElementById('langLabel').textContent = lang === 'en' ? '🇺🇸 EN' : '🇮🇩 ID';
+      document.documentElement.setAttribute('lang', lang);
+    }
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+    }
+
+    applyTheme(currentTheme);
+    applyLang(currentLang);
+    initClientSlider();
+
+    document.getElementById('themeToggle').addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+    document.getElementById('langToggle').addEventListener('click', () => applyLang(currentLang === 'en' ? 'id' : 'en'));
+
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    function closeMobileMenu() { mobileMenu.classList.remove('open'); }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.portfolio-card').forEach(card => {
+          if (filter === 'all' || card.dataset.cat === filter) card.classList.remove('hidden');
+          else card.classList.add('hidden');
+        });
+      });
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    const countObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !e.target.dataset.counted) {
+          e.target.dataset.counted = true;
+          const target = parseInt(e.target.dataset.count);
+          let start = 0;
+          const duration = 1500;
+          const step = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            e.target.textContent = Math.floor(eased * target) + '+';
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+  </script>
+</body>
+</html>
